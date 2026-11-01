@@ -1,0 +1,31 @@
+{
+  "name": "cse341-courses-rest-apis",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node --env-file=.env server.js",
+    "dev": "node --watch --env-file=.env server.js",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "express": "^5.1.0",
+    "mongodb": "^6.21.0"
+  },
+  "description": "In the context of software development, it represents learning how to build and deploy professional, production-ready web servers using Node.js and MongoDB. Here is exactly what the \"CSE 341 REST API\" framework and coursework entail:\r  refers to the practical backend projects and curriculum taught in the CSE 341 (Web Services) university course, most prominently associated with [BYU-Idaho / BYU-Pathway Worldwide](https://byupw.instructure.com/courses/65418/assignments/873090?module_item_id=2644034).",
+  "main": "app.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/iriebijudicael/CSE341-courses-REST-APIs.git"
+  },
+  "keywords": [],
+  "bugs": {
+    "url": "https://github.com/iriebijudicael/CSE341-courses-REST-APIs/issues"
+  },
+  "homepage": "https://github.com/iriebijudicael/CSE341-courses-REST-APIs#readme",
+  "devDependencies": {
+    "eslint": "^4.19.1"
+  }
+}
