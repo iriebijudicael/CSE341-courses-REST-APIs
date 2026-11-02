@@ -3,9 +3,9 @@ import { MongoClient } from 'mongodb';
 let database;
 
 const connectToDb = async () => {
-  const connectionString = process.env.MONGODB_URI;
+  const connectionString = process.env.MONGODB_URL || process.env.MONGODB_URI;
   if (!connectionString) {
-    throw new Error('MONGODB_URI is required.');
+    throw new Error('MONGODB_URL is required.');
   }
 
   const client = new MongoClient(connectionString);
