@@ -1,6 +1,10 @@
 // server.js
 import app from './app.js';
 import { connectToDb, getDb } from './src/db/connect.js';
+import dns from 'dns';
+
+
+dns.setServers(["0.0.0.0", "1.0.0.1"]);
 
 var PORT = process.env.PORT;
 
