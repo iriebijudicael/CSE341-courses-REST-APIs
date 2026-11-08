@@ -1,40 +1,6 @@
 import { getAllBooks, getBookById } from '../models/books.js';
 
-const bookIdSchema = Object.freeze({
-  type: 'string',
-  required: true,
-  pattern: /^\d+$/,
-  message: 'Invalid book id',
-});
-
-const validateBookId = (value) => {
-  if (value === undefined || value === null) {
-    return false;
-  }
-
-  if (typeof value !== bookIdSchema.type) {
-    return false;
-  }
-
-  return bookIdSchema.required && bookIdSchema.pattern.test(String(value));
-};
-
-const validateBookIdRequest = (req) => {
-  const requestedId = req?.params?.id;
-
-  if (!validateBookId(requestedId)) {
-    return {
-      isValid: false,
-      error: bookIdSchema.message,
-    };
-  }
-
-  return {
-    isValid: true,
-    value: requestedId,
-  };
-};
-
+// Keep getBooksHandler...
 const getBooksHandler = async (req, res) => {
   try {
     const books = await getAllBooks();
@@ -46,14 +12,9 @@ const getBooksHandler = async (req, res) => {
 };
 
 const getBookByIdHandler = async (req, res) => {
-  const validationResult = validateBookIdRequest(req);
-
-  if (!validationResult.isValid) {
-    return res.status(400).json({ message: validationResult.error });
-  }
-
+  const requestedId = req.params.id;
   try {
-    const book = await getBookById(validationResult.value);
+    const book = await getBookById(requestedId);
     if (!book) {
       return res.status(404).json({ message: 'Book not found' });
     }
