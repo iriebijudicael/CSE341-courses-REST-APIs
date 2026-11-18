@@ -1,30 +1,47 @@
-// server.js
-import app from './app.js';
-import { connectToDb, getDb } from './src/db/connect.js';
+import 'dotenv/config';
+import express from 'express';
+import cors from 'cors'; // <-- 1. Import cors
 import dns from 'dns';
+import swaggerUi from 'swagger-ui-express';
+import YAML from 'yamljs';
+import { connectToDb, getDb } from './src/db/connect.js';
+import router from './src/router.js';
+
+// Configure custom DNS servers for reliable MongoDB Atlas connectivity
+dns.setServers(['8.8.8.8', '1.1.1.1']);
 
 
-dns.setServers(["0.0.0.0", "1.0.0.1"]);
+const app = express();
+const PORT = process.env.PORT || 3000;
 
-var PORT = process.env.PORT;
+// --- Middleware ---
+app.use(cors()); // <-- 2. Enable CORS for all origins (or pass configuration options if needed)
+app.use(express.json());
 
-if (!PORT) {
-  throw new Error('PORT is not defined. Make sure your local npm scripts reference the .env file with --env-file=.env, or define PORT in your hosted environment settings.');
-}
+// 1. Load the Swagger YAML file from the root directory
+const swaggerDocument = YAML.load('./swagger.yaml');
+// Point Swagger Try it out at this server. Set API_BASE_URL for deployments.
+swaggerDocument.servers = [{ url: process.env.API_BASE_URL || `http://localhost:${PORT}`, description: 'Current API server' }];
 
+// 2. Serve Swagger documentation at /api-docs
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+
+// 3. Mount your app's API router
+app.use('/', router);
+
+// Start Server & Connect to Database
 const startServer = async () => {
-  try {
-    await connectToDb();
-    const books = await getDb().collection('books').find({}).toArray();
-    console.log('Book documents:', books);    
+    try {
+        await connectToDb();
+        console.log('Database connection verified successfully.');
 
-    app.listen(PORT, () => {
-      console.log(`Server listening on port ${PORT}`);
-    });
-  } catch (error) {
-    console.error('Database connection failed:', error.message);
-    process.exit(1);
-  }
+        app.listen(PORT, () => {
+            console.log(`Server listening on port ${PORT}`);
+        });
+    } catch (error) {
+        console.error('Database connection failed:', error.message);
+        process.exit(1);
+    }
 };
 
-await startServer();
+startServer();

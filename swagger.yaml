@@ -1,0 +1,333 @@
+openapi: 3.0.0
+info:
+  title: Books & Authors API - CSE 341 Week 02
+  version: 1.0.0
+  description: API for managing books and authors with relational foreign-key validation.
+servers:
+  - url: http://localhost:3000
+    description: Local server
+
+paths:
+  /books:
+    get:
+      summary: Retrieve all books
+      tags:
+        - Books
+      responses:
+        '200':
+          description: An array of book objects including authorId.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Book'
+        '500':
+          description: Internal server error.
+    post:
+      summary: Create a new book
+      tags:
+        - Books
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BookInput'
+      responses:
+        '201':
+          description: Successfully created book.
+        '400':
+          description: Missing required fields, duplicate ID, or invalid authorId.
+        '500':
+          description: Internal server error.
+
+  /books/{id}:
+    get:
+      summary: Retrieve a single book by custom ID
+      tags:
+        - Books
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          example: b1
+      responses:
+        '200':
+          description: Matching book object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Book'
+        '404':
+          description: Book not found.
+        '500':
+          description: Internal server error.
+    put:
+      summary: Update an existing book
+      tags:
+        - Books
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          example: b1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - authorId
+                - title
+                - publicationDate
+              properties:
+                authorId:
+                  type: string
+                  example: a1
+                title:
+                  type: string
+                  example: Updated Title
+                publicationDate:
+                  type: string
+                  example: "2026-02-20"
+      responses:
+        '200':
+          description: Successfully updated book.
+        '400':
+          description: Missing required fields or invalid authorId.
+        '404':
+          description: Book not found.
+        '500':
+          description: Internal server error.
+    delete:
+      summary: Delete a book by ID
+      tags:
+        - Books
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          example: b1
+      responses:
+        '204':
+          description: Successfully deleted (no content).
+        '404':
+          description: Book not found.
+        '500':
+          description: Internal server error.
+
+  /authors:
+    get:
+      summary: Retrieve all authors
+      tags:
+        - Authors
+      responses:
+        '200':
+          description: An array of author objects.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Author'
+        '500':
+          description: Internal server error.
+    post:
+      summary: Create a new author
+      tags:
+        - Authors
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthorInput'
+      responses:
+        '201':
+          description: Successfully created author.
+        '400':
+          description: Missing fields or duplicate author ID.
+        '500':
+          description: Internal server error.
+
+  /authors/{id}:
+    get:
+      summary: Retrieve an author by custom ID
+      tags:
+        - Authors
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          example: a1
+      responses:
+        '200':
+          description: Matching author object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Author'
+        '404':
+          description: Author not found.
+        '500':
+          description: Internal server error.
+    put:
+      summary: Update an existing author
+      tags:
+        - Authors
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          example: a1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+                - birthYear
+              properties:
+                name:
+                  type: string
+                  example: F. Scott Fitzgerald
+                birthYear:
+                  type: number
+                  example: 1896
+      responses:
+        '200':
+          description: Successfully updated author.
+        '400':
+          description: Missing required fields.
+        '404':
+          description: Author not found.
+        '500':
+          description: Internal server error.
+    delete:
+      summary: Delete an author by ID
+      tags:
+        - Authors
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          example: a1
+      responses:
+        '204':
+          description: Successfully deleted author.
+        '409':
+          description: Author cannot be deleted because they still have books.
+        '404':
+          description: Author not found.
+        '500':
+          description: Internal server error.
+
+  /authors/{id}/books:
+    get:
+      summary: Retrieve all books written by a specific author
+      tags:
+        - Relational
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          example: a1
+      responses:
+        '200':
+          description: Array of books matching the authorId.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Book'
+        '404':
+          description: Author not found.
+        '500':
+          description: Internal server error.
+
+components:
+  schemas:
+    Book:
+      type: object
+      properties:
+        id:
+          type: string
+          example: b1
+        authorId:
+          type: string
+          example: a1
+        title:
+          type: string
+          example: The Great Gatsby
+        publicationDate:
+          type: string
+          example: "1925-04-10"
+    BookInput:
+      type: object
+      required:
+        - id
+        - authorId
+        - title
+        - publicationDate
+      properties:
+        id:
+          type: string
+          example: b4
+        authorId:
+          type: string
+          example: a1
+        title:
+          type: string
+          example: Example Book Title
+        publicationDate:
+          type: string
+          example: "2026-01-15"
+    Author:
+      type: object
+      properties:
+        id:
+          type: string
+          example: a1
+        name:
+          type: string
+          example: F. Scott Fitzgerald
+        birthYear:
+          type: number
+          example: 1896
+    AuthorInput:
+      type: object
+      required:
+        - id
+        - name
+        - birthYear
+      properties:
+        id:
+          type: string
+          example: a3
+        name:
+          type: string
+          example: Jane Doe
+        birthYear:
+          type: number
+          example: 1985
+          type: string
+          example: American
