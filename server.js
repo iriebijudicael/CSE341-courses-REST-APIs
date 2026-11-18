@@ -8,7 +8,7 @@ import { connectToDb, getDb } from './src/db/connect.js';
 import router from './src/router.js';
 
 // Configure custom DNS servers for reliable MongoDB Atlas connectivity
-dns.setServers(['8.8.8.8', '1.1.1.1']);
+// dns.setServers(['8.8.8.8', '1.1.1.1']);
 
 
 const app = express();
