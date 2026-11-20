@@ -33,7 +33,7 @@ const getBookByIdHandler = async (req, res) => {
   }
 };
 
-// Week02
+// Week02 complete the CRUD operations for books, including getting books by author, creating a book, updating a book, and deleting a book.
 const getBooksByAuthorHandler = async (req, res) => {
   const authorId = req.params.id;
   try {
