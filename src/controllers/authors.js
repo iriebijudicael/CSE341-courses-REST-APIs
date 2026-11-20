@@ -18,7 +18,7 @@ const getAllAuthors = async (req, res) => {
 };
 
 
-// Week02
+// Week02 create the CRUD operations for authors, including getting an author by ID, creating an author, updating an author, and deleting an author.
 
 const getAuthorById = async (req, res) => {
   try {
