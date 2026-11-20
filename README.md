@@ -17,7 +17,7 @@ You can install them using npm (Node Package Manager):
 ```bash npm install express mongodb ```
 
 Repository Structure
-Each task is located in a specific branch following the pattern `week/`. For example, the individual activity for week 1 is in the branch `week01/individual-activity`.
+Each task is located in a specific branch following the pattern `week/`. For example, the individual activity for week 1 is in the branch `week01 to week07/individual-activity`.
 
 Course Learning Outcomes (CLOs)
 Understand the difference between server-side rendering and REST APIs and how to implement them.
